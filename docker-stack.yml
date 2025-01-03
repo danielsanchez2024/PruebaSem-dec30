@@ -10,36 +10,47 @@ services:
     networks:
       - nginx-network
     
-
   backoffice:
     image: gopenux/sistemas-formacion:latest
+    environment:
+      - PG_HOST=database
+      - PG_PORT=5432
+      - API_URL=https://restcountries.com/v3.1
     ports:
       - "5000:5000"
-    environment:
-      PG_HOST: "database"
-      PG_PORT: "5432"
-      PG_USER: "postgres"
-      PG_PASSWORD: "password"
-      PG_DB: "country"
+    secrets:
+      - db_password
+      - db_user
+      - db_name
     networks:
       - nginx-network
       - database-network
-    depends_on:
-      - database
 
   database:
     image: postgres:latest
+    secrets:
+      - db_password
+      - db_user
+      - db_name
     ports:
       - "5432:5432"
-    environment:
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "password"
-      POSTGRES_DB: "country"
     networks:
-      - database-network
+      database-network:
+        aliases:
+          - db
     volumes:
       - ./database-data:/var/lib/postgresql/data
-    
+    deploy:
+      replicas: 1
+
+secrets:
+  db_password:
+    file: ./secrets/db_password.txt
+  db_user:
+    file: ./secrets/db_user.txt
+  db_name:
+    file: ./secrets/db_name.txt
+
 networks: 
   nginx-network:
     driver: overlay
