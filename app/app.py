@@ -5,9 +5,9 @@ import psycopg2.extras
 
 PG_HOST = os.environ['PG_HOST']
 PG_PORT = int(os.environ['PG_PORT'])
-PG_USER = open('/run/secrets/db_user').read().strip()
-PG_PASSWORD = open('/run/secrets/db_password').read().strip()
-PG_DB = open('/run/secrets/db_name').read().strip()
+PG_USER = os.environ['PG_USER']
+PG_PASSWORD = os.environ['PG_PASSWORD']
+PG_DB = os.environ['PG_DB']
 
 conn = psycopg2.connect(
     host=PG_HOST,
