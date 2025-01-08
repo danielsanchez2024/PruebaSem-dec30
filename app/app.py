@@ -146,6 +146,10 @@ def detail_country(country_code):
         return jsonify({"message": "error", "details": str(e)}), 500
 
 
+@app.route('/livez', methods=['GET'])
+def livez():
+    return jsonify({"status": "ok"}), 200
+
 
 
 if __name__ == '__main__':
